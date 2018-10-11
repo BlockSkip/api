@@ -1,1 +1,346 @@
-
+{
+  "openapi" : "3.0.0",
+  "servers" : [ {
+    "description" : "SwaggerHub API Auto Mocking",
+    "url" : "https://virtserver.swaggerhub.com/BlockSkip/First/1.0.0"
+  } ],
+  "info" : {
+    "description" : "API documentation to integrate any cryptocurrency to wallet or exchange",
+    "version" : "1.0.0",
+    "title" : "BlockSkip API",
+    "contact" : {
+      "email" : "support@blockskip.com"
+    },
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://opensource.org/licenses/MIT"
+    }
+  },
+  "tags" : [ {
+    "name" : "Free",
+    "description" : "Free enviroment"
+  }, {
+    "name" : "Production",
+    "description" : "Production enviroment"
+  } ],
+  "paths" : {
+    "/free/createWallet" : {
+      "post" : {
+        "tags" : [ "Free" ],
+        "summary" : "Generate a new wallet",
+        "operationId" : "newWallet",
+        "description" : "Generate a new public address and private key. At free environment private key is not encrypted.",
+        "responses" : {
+          "201" : {
+            "description" : "{ \"asset\": \"XRP\", \"address\": \"rfmsbXWjB8qLudhzwy3johj8Pm9UBAFwWD\", \"privateKey\": \"U2FsdGV2X1+QFOocUjBv20abGdjteJyDm3kHl46MV3cv6A9QAVS+8DcB9Ra2xh+Z\" }"
+          },
+          "409" : {
+            "description" : "Cryptocurrency not supported"
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateWalletRequestFree"
+              }
+            }
+          },
+          "description" : "Specify which cryptocurrency or token wallet you want to create."
+        }
+      }
+    },
+    "/free/getBalance" : {
+      "post" : {
+        "tags" : [ "Free" ],
+        "summary" : "Get balance from address",
+        "operationId" : "getBalance",
+        "description" : "Get balance from any public wallet address. Confirmations is not applicable for Ripple and Stellar.",
+        "responses" : {
+          "201" : {
+            "description" : "{ \"address\": \"0xE91D422AB7CDf4558FF66365A23a5978F8BF9100\", \"asset\": \"ETC\", \"confirmations\": 1, \"amount\": 1.23342 }"
+          },
+          "409" : {
+            "description" : "Cryptocurrency not supported"
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/GetBalanceRequestFree"
+              }
+            }
+          },
+          "description" : "Use 0 confirmations to get unconfirmed balances)"
+        }
+      }
+    },
+    "/free/send" : {
+      "post" : {
+        "tags" : [ "Free" ],
+        "summary" : "Send transaction",
+        "operationId" : "send",
+        "description" : "Send cryptocurrency or token to an address.",
+        "responses" : {
+          "201" : {
+            "description" : "{ \"asset\": \"ETH\", \"amount\": \"0.039\", \"to\": \"0xf19aef451cae9fd5f897b68fc7c2f6f0b53f0be8\", \"tag\": \"\", \"from\": \"0xf5FE45CF0285F27EaF30a5007840eb3F6f18AdDB\", \"transaction\": \"0x789d41132f15d11927d97320dbf2b23a7c8a32b52d0b14510999ce831351fcb4\" }"
+          },
+          "409" : {
+            "description" : "Cryptocurrency not supported"
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SendRequestFree"
+              }
+            }
+          },
+          "description" : "At free environment the private key is not encrypted."
+        }
+      }
+    },
+    "/production/createWallet" : {
+      "post" : {
+        "tags" : [ "Production" ],
+        "summary" : "Generate a new wallet",
+        "operationId" : "newWallet",
+        "description" : "Generate a new public address and private key. At production environment the private key is send encrypted using customer master secret.",
+        "responses" : {
+          "201" : {
+            "description" : "{ \"asset\": \"XRP\", \"address\": \"rfmsbXWjB8qLudhzwy3johj8Pm9UBAFwWD\", \"privateKey\": \"U2FsdGV2X1+QFOocUjBv20abGdjteJyDm3kHl46MV3cv6A9QAVS+8DcB9Ra2xh+Z\" }"
+          },
+          "409" : {
+            "description" : "Cryptocurrency not supported"
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateWalletRequest"
+              }
+            }
+          },
+          "description" : "Key, Signature and Nonce is mandatory only in production environment. Not applicable to free environment."
+        }
+      }
+    },
+    "/production/getBalance" : {
+      "post" : {
+        "tags" : [ "Production" ],
+        "summary" : "Get balance from address",
+        "operationId" : "getBalance",
+        "description" : "Get balance from any public wallet address. Confirmations is not applicable for Ripple and Stellar.",
+        "responses" : {
+          "201" : {
+            "description" : "{ \"address\": \"0xE91D422AB7CDf4558FF66365A23a5978F8BF9100\", \"asset\": \"ETC\", \"confirmations\": 1, \"amount\": 1.2 }"
+          },
+          "409" : {
+            "description" : "Cryptocurrency not supported"
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/GetBalanceRequest"
+              }
+            }
+          },
+          "description" : "Key, Signature and Nonce is mandatory only in production environment. Not applicable for free environment."
+        }
+      }
+    },
+    "/production/send" : {
+      "post" : {
+        "tags" : [ "Production" ],
+        "summary" : "Send transaction",
+        "operationId" : "send",
+        "description" : "Send cryptocurrency or token to an address.",
+        "responses" : {
+          "201" : {
+            "description" : "{ \"asset\": \"ETH\", \"amount\": \"0.039\", \"to\": \"0xf19aef451cae9fd5f897b68fc7c2f6f0b53f0be8\", \"tag\": \"\", \"from\": \"0xf5FE45CF0285F27EaF30a5007840eb3F6f18AdDB\", \"transaction\": \"0x789d41132f15d11927d97320dbf2b23a7c8a32b52d0b14510999ce831351fcb4\" }"
+          },
+          "409" : {
+            "description" : "Cryptocurrency not supported"
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SendRequest"
+              }
+            }
+          },
+          "description" : "Attention, at production environment, Key, Signature and Nonce is mandatory and private key must by encrypted by master secret before send it. Not applicable for free environment."
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "CreateWalletRequest" : {
+        "type" : "object",
+        "required" : [ "asset", "key", "signature", "nonce" ],
+        "properties" : {
+          "asset" : {
+            "type" : "string",
+            "example" : "BTC"
+          },
+          "key" : {
+            "type" : "string",
+            "format" : "uuid",
+            "example" : "YOUR_USER_KEY"
+          },
+          "signature" : {
+            "type" : "string",
+            "example" : "YOUR_SIGNATURE"
+          },
+          "nonce" : {
+            "type" : "string",
+            "format" : "int32",
+            "example" : "100"
+          }
+        }
+      },
+      "GetBalanceRequest" : {
+        "type" : "object",
+        "required" : [ "asset", "address", "confirmations", "key", "signature", "nonce" ],
+        "properties" : {
+          "asset" : {
+            "type" : "string",
+            "example" : "ETC"
+          },
+          "address" : {
+            "type" : "string",
+            "example" : "0xE91D422AB7CDf4558FF66365A23a5978F8BF9100"
+          },
+          "confirmations" : {
+            "type" : "number",
+            "example" : 1
+          },
+          "key" : {
+            "type" : "string",
+            "format" : "uuid",
+            "example" : "YOUR_USER_KEY"
+          },
+          "signature" : {
+            "type" : "string",
+            "example" : "YOUR_SIGNATURE"
+          },
+          "nonce" : {
+            "type" : "string",
+            "format" : "int32",
+            "example" : "100"
+          }
+        }
+      },
+      "SendRequest" : {
+        "type" : "object",
+        "required" : [ "asset", "amount", "from", "to", "tag", "privateKey", "key", "signature", "nonce" ],
+        "properties" : {
+          "asset" : {
+            "type" : "string",
+            "example" : "ETC"
+          },
+          "amount" : {
+            "type" : "string",
+            "example" : "0.032"
+          },
+          "from" : {
+            "type" : "string",
+            "example" : "0xE91D422AB7CDf4558FF66365A23a5978F8BF9100"
+          },
+          "to" : {
+            "type" : "string",
+            "example" : "0xE91D422AB7CDf4558FF66365A23a5978F8BF9100"
+          },
+          "tag" : {
+            "type" : "string",
+            "example" : ""
+          },
+          "privateKey" : {
+            "type" : "string",
+            "example" : "U2FsdGV...34fs"
+          },
+          "key" : {
+            "type" : "string",
+            "format" : "uuid",
+            "example" : "YOUR_USER_KEY"
+          },
+          "signature" : {
+            "type" : "string",
+            "example" : "YOUR_SIGNATURE"
+          },
+          "nonce" : {
+            "type" : "string",
+            "format" : "int32",
+            "example" : "100"
+          }
+        }
+      },
+      "CreateWalletRequestFree" : {
+        "type" : "object",
+        "required" : [ "asset" ],
+        "properties" : {
+          "asset" : {
+            "type" : "string",
+            "example" : "BTC"
+          }
+        }
+      },
+      "GetBalanceRequestFree" : {
+        "type" : "object",
+        "required" : [ "asset", "address", "confirmations" ],
+        "properties" : {
+          "asset" : {
+            "type" : "string",
+            "example" : "ETC"
+          },
+          "address" : {
+            "type" : "string",
+            "example" : "0xE91D422AB7CDf4558FF66365A23a5978F8BF9100"
+          },
+          "confirmations" : {
+            "type" : "number",
+            "example" : 1
+          }
+        }
+      },
+      "SendRequestFree" : {
+        "type" : "object",
+        "required" : [ "asset", "amount", "from", "to", "tag", "privateKey" ],
+        "properties" : {
+          "asset" : {
+            "type" : "string",
+            "example" : "ETC"
+          },
+          "amount" : {
+            "type" : "string",
+            "example" : "0.032"
+          },
+          "from" : {
+            "type" : "string",
+            "example" : "0xE91D422AB7CDf4558FF66365A23a5978F8BF9100"
+          },
+          "to" : {
+            "type" : "string",
+            "example" : "0xE91D422AB7CDf4558FF66365A23a5978F8BF9100"
+          },
+          "tag" : {
+            "type" : "string",
+            "example" : ""
+          },
+          "privateKey" : {
+            "type" : "string",
+            "example" : "U2FsdGV...34fs"
+          }
+        }
+      }
+    }
+  }
+}
